@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relógio de Tempo Decorrido</title>
+  <style>
+    body {
+        margin: 0;
+        background: #020710;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    .logo {
+        width: 250px;
+        height: auto;
+        border-radius: 10px;
+    }
+    .titulo {
+        font-size: 1.5rem;
+        margin: 0;
+        color: #ffffff;
+        font-weight: bolder;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    }
+    .clock {
+        display: flex;
+        gap: 50px;
+        padding: 20px 40px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+    .time-box {
+        text-align: center;
+        min-width: 100px;
+    }
+    .time-value {
+        font-size: 2.8rem;
+        font-weight: bold;
+        position: relative;
+        overflow: hidden;
+        height: 3.2rem;
+    }
+    .time-value span {
+        display: block;
+        transition: transform 0.4s ease, opacity 0.4s ease;
+        will-change: transform, opacity;
+    }
+    .time-value.animate span {
+        transform: translateY(-10%);
+        opacity: 0.5;
+    }
+
+    @media (max-width: 768px) {
+        .logo {
+            width: 180px;
+        }
+
+        .titulo {
+            font-size: 1.2rem;
+            padding: 0 15px;
+        }
+
+        .clock {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .time-box {
+            min-width: 80px;
+        }
+
+        .time-value {
+            font-size: 2.2rem;
+            height: auto;
+        }
+
+        .label {
+            font-size: 0.85rem;
+        }
+
+        body {
+            padding: 20px 10px;
+            height: auto;
+            align-items: flex-start;
+        }
+    }
+  </style>
+</head>
+<body>
+
+    <div class="container">
+    <img src="amor.jpeg" alt="Logo" class="logo" />
+    <h1 class="titulo"><i>Cada segundo ao seu lado é um presente ❤️</i></h1>
+    <h2 class="titulo"><i>Desde aquele dia 14/12/2024 às 21:30, já se passaram:</i></h2>
+
+    <div class="clock">
+        <div class="time-box">
+        <div class="time-value" id="years"><span>0</span></div>
+        <div class="label">Anos</div>
+        </div>
+        <div class="time-box">
+        <div class="time-value" id="months"><span>0</span></div>
+        <div class="label">Meses</div>
+        </div>
+        <div class="time-box">
+        <div class="time-value" id="days"><span>0</span></div>
+        <div class="label">Dias</div>
+        </div>
+        <div class="time-box">
+        <div class="time-value" id="hours"><span>0</span></div>
+        <div class="label">Horas</div>
+        </div>
+        <div class="time-box">
+        <div class="time-value" id="minutes"><span>0</span></div>
+        <div class="label">Minutos</div>
+        </div>
+        <div class="time-box">
+        <div class="time-value" id="seconds"><span>0</span></div>
+        <div class="label">Segundos</div>
+        </div>
+    </div>
+    <h2 class="titulo"><i>A cada segundo, nosso amor se fortalece, e assim será para sempre!</i></h2>
+    <h2 class="titulo" style="color: rgb(239, 74, 74);"><i>MEU AMOR, EU TE AMO!</i></h2>
+    </div>
+
+  <script>
+    const startDate = new Date('2024-12-14T21:30:00Z');
+    const ids = ["years", "months", "days", "hours", "minutes", "seconds"];
+
+    function updateClock() {
+        const now = new Date();
+        let diff = {
+            years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0,
+        };
+
+        let tempDate = new Date(startDate);
+
+        while (new Date(tempDate.getFullYear() + 1, tempDate.getMonth(), tempDate.getDate()) <= now) {
+            tempDate.setFullYear(tempDate.getFullYear() + 1);
+            diff.years++;
+        }
+
+        while (new Date(tempDate.getFullYear(), tempDate.getMonth() + 1, tempDate.getDate()) <= now) {
+            tempDate.setMonth(tempDate.getMonth() + 1);
+            diff.months++;
+        }
+
+        while (new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate() + 1) <= now) {
+            tempDate.setDate(tempDate.getDate() + 1);
+            diff.days++;
+        }
+
+        const deltaMs = now - tempDate;
+        diff.hours = Math.floor(deltaMs / (1000 * 60 * 60));
+        diff.minutes = Math.floor((deltaMs % (1000 * 60 * 60)) / (1000 * 60));
+        diff.seconds = Math.floor((deltaMs % (1000 * 60)) / 1000);
+
+        ids.forEach((unit) => {
+            const el = document.getElementById(unit);
+            const span = el.querySelector("span");
+
+            if (span.textContent !== diff[unit].toString()) {
+            el.classList.add("animate");
+            span.textContent = diff[unit];
+            setTimeout(() => el.classList.remove("animate"), 300);
+            }
+        });
+    }
+
+    updateClock(); // inicial
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
